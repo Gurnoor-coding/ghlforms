@@ -162,6 +162,22 @@ button:hover {
     max-width: 250px;         /* adjust size as needed */
     height: auto;
 }
+
+
+.duplicate-btn {
+    margin-top: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.duplicate-btn:hover {
+    background: #0062cc;
+}
 </style>
 </head>
 
@@ -307,13 +323,42 @@ function addEntry() {
         <label>Configuration Exterior View *</label>
         <input type="text" name="configExterior_${entryCount}">
     </div>
-
+    <button type="button" class="duplicate-btn full-width" onclick="duplicateEntry(this)">📄 Duplicate Entry</button>
     <button type="button" class="delete-btn full-width" onclick="this.parentElement.remove()">🗑️ Delete Entry</button>
 `;
 
 	container.appendChild(entry);
 }
 
+function duplicateEntry(button) {
+    const original = button.parentElement;
+    const clone = original.cloneNode(true);
+
+    // Increase entry count
+    entryCount++;
+
+    // Update title
+    clone.querySelector(".entry-title").textContent = `Entry ${entryCount}`;
+
+    // Update all input/textarea names but KEEP values
+    const fields = clone.querySelectorAll("input, textarea");
+    fields.forEach(field => {
+        const base = field.name.split("_")[0];
+        field.name = `${base}_${entryCount}`;
+        // DO NOT clear field.value
+    });
+
+    // Re-bind duplicate + delete buttons
+    clone.querySelector(".duplicate-btn").onclick = function () {
+        duplicateEntry(this);
+    };
+    clone.querySelector(".delete-btn").onclick = function () {
+        clone.remove();
+    };
+
+    // Insert clone after original
+    original.after(clone);
+}
 document.getElementById("contractForm").addEventListener("submit", function(e) {
 	e.preventDefault();
 
