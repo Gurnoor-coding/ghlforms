@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Bear Intake Contract</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background: #f5f7fa;
+			padding: 40px;
+		}
+
+		.container {
+			max-width: 900px;
+			margin: auto;
+			background: white;
+			padding: 40px;
+			border-radius: 8px;
+			box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+		}
+
+		h1 {
+			text-align: center;
+			margin-bottom: 10px;
+		}
+
+		h2 {
+			margin-top: 40px;
+			border-bottom: 2px solid #ddd;
+			padding-bottom: 5px;
+		}
+
+		.field-group {
+			display: grid;
+			grid-template-columns: 1fr 2fr;
+			gap: 15px;
+			margin-bottom: 15px;
+			align-items: center;
+		}
+
+		label {
+			font-weight: bold;
+		}
+
+		input, textarea, select {
+			width: 100%;
+			padding: 8px;
+			border-radius: 4px;
+			border: 1px solid #ccc;
+		}
+
+		textarea {
+			resize: vertical;
+		}
+
+		.checkbox-group {
+			margin-top: 10px;
+		}
+
+		.signature {
+			margin-top: 40px;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 30px;
+		}
+
+		.signature input {
+			border-bottom: 2px solid #000;
+			border-radius: 0;
+			border-top: none;
+			border-left: none;
+			border-right: none;
+		}
+
+		button {
+			margin-top: 40px;
+			width: 100%;
+			padding: 15px;
+			font-size: 16px;
+			background: #2c7be5;
+			color: white;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background: #1a68d1;
+		}
+
+
+
+
+        .add-btn {
+	margin-top: 15px;
+	background: #28a745;
+	color: white;
+	border: none;
+	padding: 10px 16px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+.add-btn:hover {
+	background: #218838;
+}
+
+.entry-block {
+	margin-top: 25px;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+	background: #fafafa;
+}
+
+.entry-title {
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+
+	</style>
+</head>
+
+
+
+
+<script>
+	let entryCount = 0;
+
+	function addEntry() {
+		entryCount++;
+
+		const container = document.getElementById("entries-container");
+
+		const entry = document.createElement("div");
+		entry.className = "entry-block";
+
+		entry.innerHTML = `
+			<div class="entry-title">Entry ${entryCount}</div>
+
+			<div class="field-group">
+				<label>Qty *</label>
+				<input type="number" name="qty_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Width *</label>
+				<input type="text" name="width_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Height *</label>
+				<input type="text" name="height_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Multiplying factor *</label>
+				<input type="text" name="factor_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Frame *</label>
+				<input type="text" name="frame_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Glass Type *</label>
+				<input type="text" name="glassType_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Glass Make-up *</label>
+				<input type="text" name="glassMakeup_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Existing wall type *</label>
+				<input type="text" name="wallType_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Color (interior/exterior) *</label>
+				<input type="text" name="color_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Grid *</label>
+				<input type="text" name="grid_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Room *</label>
+				<input type="text" name="room_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Price *</label>
+				<input type="text" name="price_${entryCount}">
+			</div>
+
+			<div class="field-group">
+				<label>Special notes *</label>
+				<textarea name="notes_${entryCount}"></textarea>
+			</div>
+
+			<div class="field-group">
+				<label>Configuration Exterior View *</label>
+				<input type="text" name="configExterior_${entryCount}">
+			</div>
+		`;
+
+		container.appendChild(entry);
+	}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<body>
+
+<div class="container">
+	<h1>Bear Intake Contract</h1>
+	<p>Please complete all applicable fields below.</p>
+
+	<h2>Client Information</h2>
+
+	<div class="field-group">
+		<label>Sold To</label>
+		<input type="text">
+	</div>
+
+	<div class="field-group">
+		<label>Phone Number</label>
+		<input type="tel">
+	</div>
+
+	<div class="field-group">
+		<label>Email</label>
+		<input type="email">
+	</div>
+
+	<div class="field-group">
+		<label>Job Site</label>
+		<input type="text">
+	</div>
+
+	<h2>Service Details</h2>
+
+	<div class="field-group">
+		<label>Type of Service</label>
+		<input type="text">
+	</div>
+
+	<div class="field-group">
+		<label>Preferred Date</label>
+		<input type="date">
+	</div>
+
+	<div class="field-group">
+		<label>Additional Notes</label>
+		<textarea rows="4"></textarea>
+	</div>
+
+	<h2>Agreement</h2>
+
+	<div class="checkbox-group">
+		<label>
+			<input type="checkbox"> I agree to the terms and conditions outlined in this contract.
+		</label>
+	</div>
+
+	<div class="signature">
+		<div>
+			<label>Client Signature</label>
+			<input type="text">
+		</div>
+		<div>
+			<label>Date</label>
+			<input type="date">
+		</div>
+
+
+        <div>
+    <h2>Additional Entries</h2>
+
+<div id="entries-container"></div>
+
+<button type="button" class="add-btn" onclick="addEntry()">➕ Add Another Entry</button>
+
+</div>
+	</div>
+
+	<button type="submit">Submit Contract</button>
+</div>
+
+
+
+</body>
+</html>

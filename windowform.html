@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Bear Intake Contract</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+	body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    padding: 40px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-top: 40px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.field-group {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.checkbox-group {
+    margin-top: 10px;
+}
+
+.signature {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.signature input {
+    border-bottom: 2px solid #000;
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+button {
+    margin-top: 40px;
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    background: #2c7be5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1a68d1;
+}
+
+.add-btn {
+    margin-top: 15px;
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.add-btn:hover {
+    background: #218838;
+}
+
+/* ----------------------------- */
+/* ENTRY BLOCK FIXED + CLEANED   */
+/* ----------------------------- */
+
+.entry-block {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 3 even columns */
+    gap: 20px 25px; /* row gap, column gap */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fafafa;
+}
+
+.entry-title {
+    grid-column: 1 / -1; /* full width */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Override default field-group inside entry */
+.entry-block .field-group {
+    display: flex;
+    flex-direction: column; /* label above input */
+    gap: 5px;
+}
+
+/* Make long fields span full width */
+.entry-block .full-width {
+    grid-column: 1 / -1;
+}
+
+.entry-block .delete-btn {
+    grid-column: 1 / -1; /* full width */
+    justify-self: start; /* align left or change to center if you prefer */
+    margin-top: 10px;
+}
+/* Delete button */
+.delete-btn {
+    margin-top: 10px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.delete-btn:hover {
+    background: #b52a37;
+}
+.form-logo {
+    display: block;
+    margin: 0 auto 20px auto; /* center + spacing */
+    max-width: 250px;         /* adjust size as needed */
+    height: auto;
+}
+</style>
+</head>
+
+<body>
+
+<form id="contractForm">
+<div class="container">
+  <img 
+    src="https://images.leadconnectorhq.com/image/f_webp/q_85/r_1000/u_https://storage.googleapis.com/highlevel-backend.appspot.com/location/xzNra69OGYHaxmdDlDMn/form/eDvPanXWhbtHSvXrKdqz/b7d8cff1-2f99-4651-9dd9-f269926c08bb.webp" 
+    alt="Company Logo" 
+    class="form-logo"
+/>
+	<h1>Bear Intake Contract</h1>
+	<p>Please complete all applicable fields below.</p>
+
+	<h2>Client Information</h2>
+
+	<div class="field-group">
+		<label>Sold To</label>
+		<input type="text" name="soldTo">
+	</div>
+
+	<div class="field-group">
+		<label>Phone Number</label>
+		<input type="tel" name="phone">
+	</div>
+
+	<div class="field-group">
+		<label>Email</label>
+		<input type="email" name="email">
+	</div>
+
+	<div class="field-group">
+		<label>Job Site</label>
+		<input type="text" name="jobSite">
+	</div>
+
+	<h2>Service Details</h2>
+
+	<div class="field-group">
+		<label>Type of Service</label>
+		<input type="text" name="serviceType">
+	</div>
+
+	<div class="field-group">
+		<label>Preferred Date</label>
+		<input type="date" name="preferredDate">
+	</div>
+
+    <h2>Add Items</h2>
+
+	<div id="entries-container"></div>
+
+	<button type="button" class="add-btn" onclick="addEntry()">➕ Add Item</button>
+
+
+	
+
+	<button type="submit">Submit Contract</button>
+</div>
+</form>
+
+<script>
+let entryCount = 0;
+
+function addEntry() {
+	entryCount++;
+
+	const container = document.getElementById("entries-container");
+
+	const entry = document.createElement("div");
+	entry.className = "entry-block";
+
+	entry.innerHTML = `
+    <div class="entry-title">Entry ${entryCount}</div>
+
+    <div class="field-group">
+        <label>Qty *</label>
+        <input type="number" name="qty_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Width *</label>
+        <input type="text" name="width_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Height *</label>
+        <input type="text" name="height_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Multiplying factor *</label>
+        <input type="text" name="factor_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Frame *</label>
+        <input type="text" name="frame_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Glass Type *</label>
+        <input type="text" name="glassType_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Glass Make-up *</label>
+        <input type="text" name="glassMakeup_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Existing wall type *</label>
+        <input type="text" name="wallType_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Color (interior/exterior) *</label>
+        <input type="text" name="color_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Grid *</label>
+        <input type="text" name="grid_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Room *</label>
+        <input type="text" name="room_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Price *</label>
+        <input type="text" name="price_${entryCount}">
+    </div>
+
+    <div class="field-group">
+        <label>Special notes *</label>
+        <textarea name="notes_${entryCount}"></textarea>
+    </div>
+
+    <div class="field-group">
+        <label>Configuration Exterior View *</label>
+        <input type="text" name="configExterior_${entryCount}">
+    </div>
+
+    <button type="button" class="delete-btn full-width" onclick="this.parentElement.remove()">🗑️ Delete Entry</button>
+`;
+
+	container.appendChild(entry);
+}
+
+document.getElementById("contractForm").addEventListener("submit", function(e) {
+	e.preventDefault();
+
+	// Validate top-level fields
+	const requiredTop = document.querySelectorAll(
+		"input[name='soldTo'], input[name='phone'], input[name='email'], input[name='jobSite'], input[name='serviceType'], input[name='preferredDate']"
+	);
+
+	for (let field of requiredTop) {
+		if (field.value.trim() === "") {
+			alert("Please fill out all required fields.");
+			field.focus();
+			return;
+		}
+	}
+
+
+ 
+
+
+	// Build main JSON object
+	const formData = {
+		soldTo: document.querySelector("input[name='soldTo']").value,
+		phone: document.querySelector("input[name='phone']").value,
+		email: document.querySelector("input[name='email']").value,
+		jobSite: document.querySelector("input[name='jobSite']").value,
+		serviceType: document.querySelector("input[name='serviceType']").value,
+		preferredDate: document.querySelector("input[name='preferredDate']").value,
+		entries: []
+	};
+
+	// Collect dynamic entries
+	const entryBlocks = document.querySelectorAll(".entry-block");
+    if (entryBlocks.length === 0) {
+    alert("Please add at least one item before submitting.");
+    return;
+}
+	for (let block of entryBlocks) {
+		const entry = {
+			qty: block.querySelector("input[name^='qty_']").value,
+			width: block.querySelector("input[name^='width_']").value,
+			height: block.querySelector("input[name^='height_']").value,
+			factor: block.querySelector("input[name^='factor_']").value,
+			frame: block.querySelector("input[name^='frame_']").value,
+			glassType: block.querySelector("input[name^='glassType_']").value,
+			glassMakeup: block.querySelector("input[name^='glassMakeup_']").value,
+			wallType: block.querySelector("input[name^='wallType_']").value,
+			color: block.querySelector("input[name^='color_']").value,
+			grid: block.querySelector("input[name^='grid_']").value,
+			room: block.querySelector("input[name^='room_']").value,
+			price: block.querySelector("input[name^='price_']").value,
+			notes: block.querySelector("textarea[name^='notes_']").value,
+			configExterior: block.querySelector("input[name^='configExterior_']").value
+		};
+
+		// Validate entry fields
+		for (let key in entry) {
+			if (entry[key].trim() === "") {
+				alert("Please fill out all fields in each entry.");
+				return;
+			}
+		}
+
+		formData.entries.push(entry);
+	}
+
+	console.log("FINAL JSON OBJECT:", formData);
+    document.body.innerHTML = `
+    <div style="text-align:center; padding:50px; font-size:24px;">
+        <h2>Thank you!</h2>
+        <p>Your form has been submitted successfully.</p>
+    </div>
+`;
+	//alert("Form submitted! Check console for JSON output.");
+});
+</script>
+
+</body>
+</html>
