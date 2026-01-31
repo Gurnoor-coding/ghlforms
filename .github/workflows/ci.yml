@@ -4,10 +4,19 @@ on: push
 
 jobs:
   run-on-commit:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Say hello
         run: echo "A commit was pushed — workflow triggered!"
+
+      - name: Create artifact file
+        run: echo "Hello from GitHub Actions!" > message.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: message
+          path: message.txt
