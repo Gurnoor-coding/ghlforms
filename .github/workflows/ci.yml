@@ -1,0 +1,13 @@
+name: On Commit
+
+on: push
+
+jobs:
+  run-on-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Say hello
+        run: echo "A commit was pushed — workflow triggered!"
