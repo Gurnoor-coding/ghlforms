@@ -1,188 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Bear Intake Contract</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-	body {
-    font-family: Arial, sans-serif;
-    background: #f5f7fa;
-    padding: 40px;
-}
-
-.container {
-    max-width: 900px;
-    margin: auto;
-    background: white;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-h1 {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-h2 {
-    margin-top: 40px;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 5px;
-}
-
-.field-group {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 15px;
-    margin-bottom: 15px;
-    align-items: center;
-}
-
-label {
-    font-weight: bold;
-}
-
-input, textarea, select {
-    width: 100%;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-textarea {
-    resize: vertical;
-}
-
-.checkbox-group {
-    margin-top: 10px;
-}
-
-.signature {
-    margin-top: 40px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-}
-
-.signature input {
-    border-bottom: 2px solid #000;
-    border-radius: 0;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-}
-
-button {
-    margin-top: 40px;
-    width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    background: #2c7be5;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #1a68d1;
-}
-
-.add-btn {
-    margin-top: 15px;
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.add-btn:hover {
-    background: #218838;
-}
-
-/* ----------------------------- */
-/* ENTRY BLOCK FIXED + CLEANED   */
-/* ----------------------------- */
-
-.entry-block {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 3 even columns */
-    gap: 20px 25px; /* row gap, column gap */
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background: #fafafa;
-}
-
-.entry-title {
-    grid-column: 1 / -1; /* full width */
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-/* Override default field-group inside entry */
-.entry-block .field-group {
-    display: flex;
-    flex-direction: column; /* label above input */
-    gap: 5px;
-}
-
-/* Make long fields span full width */
-.entry-block .full-width {
-    grid-column: 1 / -1;
-}
-
-.entry-block .delete-btn {
-    grid-column: 1 / -1; /* full width */
-    justify-self: start; /* align left or change to center if you prefer */
-    margin-top: 10px;
-}
-/* Delete button */
-.delete-btn {
-    margin-top: 10px;
-    background: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.delete-btn:hover {
-    background: #b52a37;
-}
-.form-logo {
-    display: block;
-    margin: 0 auto 20px auto; /* center + spacing */
-    max-width: 250px;         /* adjust size as needed */
-    height: auto;
-}
-
-
-.duplicate-btn {
-    margin-top: 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.duplicate-btn:hover {
-    background: #0062cc;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Bear Intake Contract</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
+<div id="statusMessage"></div>
 <form id="contractForm">
 <div class="container">
   <img 
@@ -233,15 +59,57 @@ button:hover {
 
 	<button type="button" class="add-btn" onclick="addEntry()">➕ Add Item</button>
 
-
-	
+	<!-- Totals Display -->
+	<div style="margin-top: 30px; padding: 20px; background: #f0f0f0; border-radius: 8px;">
+		<h3 style="margin-top: 0;">Order Summary</h3>
+		<div style="display: flex; justify-content: space-between; margin: 10px 0;">
+			<strong>Subtotal:</strong>
+			<span id="subtotalDisplay">$0.00</span>
+		</div>
+		<div style="display: flex; justify-content: space-between; margin: 10px 0;">
+			<strong>Tax (10.25%):</strong>
+			<span id="taxDisplay">$0.00</span>
+		</div>
+		<div style="display: flex; justify-content: space-between; margin: 10px 0; font-size: 20px; border-top: 2px solid #333; padding-top: 10px;">
+			<strong>Total:</strong>
+			<strong id="totalDisplay">$0.00</strong>
+		</div>
+	</div>
 
 	<button type="submit">Submit Contract</button>
 </div>
 </form>
-
 <script>
+
 let entryCount = 0;
+
+function calculatePrice(entryId) {
+	const width = parseFloat(document.querySelector(`input[name='width_${entryId}']`).value) || 0;
+	const height = parseFloat(document.querySelector(`input[name='height_${entryId}']`).value) || 0;
+	const factor = parseFloat(document.querySelector(`input[name='factor_${entryId}']`).value) || 0;
+	
+	const price = (width + height) * factor;
+	document.querySelector(`#price_${entryId}`).textContent = `$${price.toFixed(2)}`;
+	
+	updateTotals();
+}
+
+function updateTotals() {
+	let subtotal = 0;
+	
+	// Calculate subtotal from all price displays
+	document.querySelectorAll('[id^="price_"]').forEach(priceEl => {
+		const priceValue = parseFloat(priceEl.textContent.replace('$', '')) || 0;
+		subtotal += priceValue;
+	});
+	
+	const tax = subtotal * 0.1025;
+	const total = subtotal + tax;
+	
+	document.getElementById('subtotalDisplay').textContent = `$${subtotal.toFixed(2)}`;
+	document.getElementById('taxDisplay').textContent = `$${tax.toFixed(2)}`;
+	document.getElementById('totalDisplay').textContent = `$${total.toFixed(2)}`;
+}
 
 function addEntry() {
 	entryCount++;
@@ -261,17 +129,17 @@ function addEntry() {
 
     <div class="field-group">
         <label>Width *</label>
-        <input type="text" name="width_${entryCount}">
+        <input type="text" name="width_${entryCount}" oninput="calculatePrice(${entryCount})">
     </div>
 
     <div class="field-group">
         <label>Height *</label>
-        <input type="text" name="height_${entryCount}">
+        <input type="text" name="height_${entryCount}" oninput="calculatePrice(${entryCount})">
     </div>
 
     <div class="field-group">
         <label>Multiplying factor *</label>
-        <input type="text" name="factor_${entryCount}">
+        <input type="text" name="factor_${entryCount}" oninput="calculatePrice(${entryCount})">
     </div>
 
     <div class="field-group">
@@ -310,8 +178,10 @@ function addEntry() {
     </div>
 
     <div class="field-group">
-        <label>Price *</label>
-        <input type="text" name="price_${entryCount}">
+        <label>Price</label>
+        <div style="padding: 10px; background: #e8f5e9; border-radius: 4px; font-weight: bold; font-size: 18px;">
+            <span id="price_${entryCount}">$0.00</span>
+        </div>
     </div>
 
     <div class="field-group">
@@ -324,10 +194,15 @@ function addEntry() {
         <input type="text" name="configExterior_${entryCount}">
     </div>
     <button type="button" class="duplicate-btn full-width" onclick="duplicateEntry(this)">📄 Duplicate Entry</button>
-    <button type="button" class="delete-btn full-width" onclick="this.parentElement.remove()">🗑️ Delete Entry</button>
+    <button type="button" class="delete-btn full-width" onclick="deleteEntry(this)">🗑️ Delete Entry</button>
 `;
 
 	container.appendChild(entry);
+}
+
+function deleteEntry(button) {
+	button.parentElement.remove();
+	updateTotals();
 }
 
 function duplicateEntry(button) {
@@ -340,100 +215,117 @@ function duplicateEntry(button) {
     // Update title
     clone.querySelector(".entry-title").textContent = `Entry ${entryCount}`;
 
-    // Update all input/textarea names but KEEP values
+    // Update all input/textarea names and IDs but KEEP values
     const fields = clone.querySelectorAll("input, textarea");
     fields.forEach(field => {
         const base = field.name.split("_")[0];
         field.name = `${base}_${entryCount}`;
-        // DO NOT clear field.value
+        
+        // Add oninput handlers for calculation fields
+        if (base === 'width' || base === 'height' || base === 'factor') {
+            field.setAttribute('oninput', `calculatePrice(${entryCount})`);
+        }
     });
+
+    // Update price display ID
+    const priceDisplay = clone.querySelector('[id^="price_"]');
+    priceDisplay.id = `price_${entryCount}`;
 
     // Re-bind duplicate + delete buttons
     clone.querySelector(".duplicate-btn").onclick = function () {
         duplicateEntry(this);
     };
     clone.querySelector(".delete-btn").onclick = function () {
-        clone.remove();
+        deleteEntry(this);
     };
 
     // Insert clone after original
     original.after(clone);
+    
+    // Recalculate price for duplicated entry
+    calculatePrice(entryCount);
 }
+
 document.getElementById("contractForm").addEventListener("submit", function(e) {
-	e.preventDefault();
+    e.preventDefault();
 
-	// Validate top-level fields
-	const requiredTop = document.querySelectorAll(
-		"input[name='soldTo'], input[name='phone'], input[name='email'], input[name='jobSite'], input[name='serviceType'], input[name='preferredDate']"
-	);
+    // Validate top-level fields
+    const requiredTop = document.querySelectorAll(
+        "input[name='soldTo'], input[name='phone'], input[name='email'], input[name='jobSite'], input[name='serviceType'], input[name='preferredDate']"
+    );
 
-	for (let field of requiredTop) {
-		if (field.value.trim() === "") {
-			alert("Please fill out all required fields.");
-			field.focus();
-			return;
-		}
-	}
+    for (let field of requiredTop) {
+        if (field.value.trim() === "") {
+            alert("Please fill out all required fields.");
+            field.focus();
+            return;
+        }
+    }
 
+    // Build main JSON object
+    const formData = {
+        soldTo: document.querySelector("input[name='soldTo']").value,
+        phone: document.querySelector("input[name='phone']").value,
+        email: document.querySelector("input[name='email']").value,
+        jobSite: document.querySelector("input[name='jobSite']").value,
+        serviceType: document.querySelector("input[name='serviceType']").value,
+        preferredDate: document.querySelector("input[name='preferredDate']").value,
+        entries: []
+    };
 
- 
-
-
-	// Build main JSON object
-	const formData = {
-		soldTo: document.querySelector("input[name='soldTo']").value,
-		phone: document.querySelector("input[name='phone']").value,
-		email: document.querySelector("input[name='email']").value,
-		jobSite: document.querySelector("input[name='jobSite']").value,
-		serviceType: document.querySelector("input[name='serviceType']").value,
-		preferredDate: document.querySelector("input[name='preferredDate']").value,
-		entries: []
-	};
-
-	// Collect dynamic entries
-	const entryBlocks = document.querySelectorAll(".entry-block");
+    // Collect dynamic entries
+    const entryBlocks = document.querySelectorAll(".entry-block");
     if (entryBlocks.length === 0) {
-    alert("Please add at least one item before submitting.");
-    return;
-}
-	for (let block of entryBlocks) {
-		const entry = {
-			qty: block.querySelector("input[name^='qty_']").value,
-			width: block.querySelector("input[name^='width_']").value,
-			height: block.querySelector("input[name^='height_']").value,
-			factor: block.querySelector("input[name^='factor_']").value,
-			frame: block.querySelector("input[name^='frame_']").value,
-			glassType: block.querySelector("input[name^='glassType_']").value,
-			glassMakeup: block.querySelector("input[name^='glassMakeup_']").value,
-			wallType: block.querySelector("input[name^='wallType_']").value,
-			color: block.querySelector("input[name^='color_']").value,
-			grid: block.querySelector("input[name^='grid_']").value,
-			room: block.querySelector("input[name^='room_']").value,
-			price: block.querySelector("input[name^='price_']").value,
-			notes: block.querySelector("textarea[name^='notes_']").value,
-			configExterior: block.querySelector("input[name^='configExterior_']").value
-		};
+        alert("Please add at least one item before submitting.");
+        return;
+    }
 
-		// Validate entry fields
-		for (let key in entry) {
-			if (entry[key].trim() === "") {
-				alert("Please fill out all fields in each entry.");
-				return;
-			}
-		}
+    for (let block of entryBlocks) {
+        const width = block.querySelector("input[name^='width_']").value;
+        const height = block.querySelector("input[name^='height_']").value;
+        const factor = block.querySelector("input[name^='factor_']").value;
+        const priceDisplay = block.querySelector("[id^='price_']").textContent;
+        
+        const entry = {
+            qty: block.querySelector("input[name^='qty_']").value,
+            width: width,
+            height: height,
+            factor: factor,
+            frame: block.querySelector("input[name^='frame_']").value,
+            glassType: block.querySelector("input[name^='glassType_']").value,
+            glassMakeup: block.querySelector("input[name^='glassMakeup_']").value,
+            wallType: block.querySelector("input[name^='wallType_']").value,
+            color: block.querySelector("input[name^='color_']").value,
+            grid: block.querySelector("input[name^='grid_']").value,
+            room: block.querySelector("input[name^='room_']").value,
+            price: priceDisplay.replace('$', ''),
+            notes: block.querySelector("textarea[name^='notes_']").value,
+            configExterior: block.querySelector("input[name^='configExterior_']").value
+        };
 
-		formData.entries.push(entry);
-	}
+        // Validate entry fields (except price which is calculated)
+        for (let key in entry) {
+            if (key !== 'price' && entry[key].trim() === "") {
+                alert("Please fill out all fields in each entry.");
+                return;
+            }
+        }
 
-	console.log("FINAL JSON OBJECT:", formData);
-    document.body.innerHTML = `
-    <div style="text-align:center; padding:50px; font-size:24px;">
-        <h2>Thank you!</h2>
-        <p>Your form has been submitted successfully.</p>
-    </div>
-`;
-	//alert("Form submitted! Check console for JSON output.");
+        formData.entries.push(entry);
+    }
+
+    // Add totals to formData
+    formData.subtotal = document.getElementById('subtotalDisplay').textContent.replace('$', '');
+    formData.tax = document.getElementById('taxDisplay').textContent.replace('$', '');
+    formData.total = document.getElementById('totalDisplay').textContent.replace('$', '');
+
+    console.log("FINAL JSON OBJECT:", formData);
+
+    // Save to localStorage and redirect to thank you page
+    localStorage.setItem('bearContractData', JSON.stringify(formData));
+    window.location.href = 'thank-you.html';
 });
+
 </script>
 
 </body>

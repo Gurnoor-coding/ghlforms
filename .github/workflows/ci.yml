@@ -2,6 +2,7 @@ name: On Commit
 
 on: push
 
+
 jobs:
   run-on-commit:
     runs-on: windows-latest
@@ -20,3 +21,36 @@ jobs:
         with:
           name: message
           path: message.txt
+
+  run-on-push:
+    runs-on: windows-latest
+      steps:
+        - name:
+          uses:
+          run:
+
+
+jobs:
+    onpush:
+        runs-on: windows-latest
+        steps:
+            - name: ""
+              uses: ""
+            
+            - name: ""
+              run:  ""
+
+
+
+
+
+
+
+jobs:
+    on-push:
+        runs-on: windows-latest
+        steps:
+          - name: ""
+            run: ""
+
+
