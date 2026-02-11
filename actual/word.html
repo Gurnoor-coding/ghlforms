@@ -1,0 +1,508 @@
+async function downloadWord() {
+            showLoading();
+            try {
+                const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType, HeadingLevel, TextRun, UnderlineType } = docx;
+
+                const doc = new Document({
+                    sections: [{
+                        properties: {
+                            page: {
+                                margin: {
+                                    top: 720,
+                                    right: 720,
+                                    bottom: 720,
+                                    left: 720,
+                                },
+                            },
+                        },
+                        children: [
+                            // Header/Title
+                            new Paragraph({
+                                text: "BEAR INTAKE CONTRACT",
+                                heading: HeadingLevel.HEADING_1,
+                                alignment: AlignmentType.CENTER,
+                                spacing: { after: 200 }
+                            }),
+
+                            // Contract Date
+                            new Paragraph({
+                                text: `Date: ${new Date().toLocaleDateString()}`,
+                                alignment: AlignmentType.RIGHT,
+                                spacing: { after: 300 }
+                            }),
+
+                            // Client Information Table
+                            new Paragraph({
+                                text: "CLIENT INFORMATION",
+                                heading: HeadingLevel.HEADING_2,
+                                spacing: { before: 200, after: 100 }
+                            }),
+
+                            new Table({
+                                width: { size: 100, type: WidthType.PERCENTAGE },
+                                rows: [
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Sold To:", bold: true })],
+                                                width: { size: 20, type: WidthType.PERCENTAGE },
+                                                shading: { fill: "E7E6E6" }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph(formData.soldTo)],
+                                                width: { size: 30, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Phone:", bold: true })],
+                                                width: { size: 20, type: WidthType.PERCENTAGE },
+                                                shading: { fill: "E7E6E6" }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph(formData.phone)],
+                                                width: { size: 30, type: WidthType.PERCENTAGE }
+                                            })
+                                        ]
+                                    }),
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Email:", bold: true })],
+                                                shading: { fill: "E7E6E6" }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph(formData.email)]
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Job Site:", bold: true })],
+                                                shading: { fill: "E7E6E6" }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph(formData.jobSite)]
+                                            })
+                                        ]
+                                    })
+                                ]
+                            }),
+
+                            // Service Details Table
+                            new Paragraph({
+                                text: "SERVICE DETAILS",
+                                heading: HeadingLevel.HEADING_2,
+                                spacing: { before: 400, after: 100 }
+                            }),
+
+                            new Table({
+                                width: { size: 100, type: WidthType.PERCENTAGE },
+                                rows: [
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Service Type:", bold: true })],
+                                                width: { size: 20, type: WidthType.PERCENTAGE },
+                                                shading: { fill: "E7E6E6" }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph(formData.serviceType)],
+                                                width: { size: 30, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Preferred Date:", bold: true })],
+                                                width: { size: 20, type: WidthType.PERCENTAGE },
+                                                shading: { fill: "E7E6E6" }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph(formData.preferredDate)],
+                                                width: { size: 30, type: WidthType.PERCENTAGE }
+                                            })
+                                        ]
+                                    })
+                                ]
+                            }),
+
+                            // Items Header
+                            new Paragraph({
+                                text: "ITEMS & SPECIFICATIONS",
+                                heading: HeadingLevel.HEADING_2,
+                                spacing: { before: 400, after: 200 }
+                            }),
+
+                            // Items Table - Spreadsheet Style
+                            new Table({
+                                width: { size: 100, type: WidthType.PERCENTAGE },
+                                rows: [
+                                    // Header Row
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "#", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 3, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Qty", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 4, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Width", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 5, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Height", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 5, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Factor", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 5, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Frame", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 8, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Glass Type", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 8, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Glass Make-up", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 10, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Wall Type", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 8, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Color", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 8, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Grid", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 6, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Room", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 8, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Config Ext.", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 10, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Price", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 7, type: WidthType.PERCENTAGE }
+                                            })
+                                        ]
+                                    }),
+                                    // Data Rows
+                                    ...formData.entries.map((entry, i) => 
+                                        new TableRow({
+                                            children: [
+                                                new TableCell({
+                                                    children: [new Paragraph((i + 1).toString())],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.qty)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.width)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.height)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.factor)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.frame)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.glassType)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.glassMakeup)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.wallType)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.color)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.grid)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.room)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.configExterior)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph({ text: `$${entry.price}`, bold: true })],
+                                                    shading: { fill: i % 2 === 0 ? "D6EAF8" : "AED6F1" }
+                                                })
+                                            ]
+                                        })
+                                    )
+                                ]
+                            }),
+
+                            // Totals Section
+                            new Paragraph({
+                                text: "",
+                                spacing: { before: 300 }
+                            }),
+
+                            new Table({
+                                width: { size: 100, type: WidthType.PERCENTAGE },
+                                rows: [
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Subtotal:", bold: true, alignment: AlignmentType.RIGHT })],
+                                                width: { size: 85, type: WidthType.PERCENTAGE },
+                                                shading: { fill: "F2F2F2" }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: `$${formData.subtotal}`, bold: true })],
+                                                width: { size: 15, type: WidthType.PERCENTAGE },
+                                                shading: { fill: "F2F2F2" }
+                                            })
+                                        ]
+                                    }),
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Tax (10.25%):", bold: true, alignment: AlignmentType.RIGHT })],
+                                                shading: { fill: "FFFFFF" }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: `$${formData.tax}`, bold: true })],
+                                                shading: { fill: "FFFFFF" }
+                                            })
+                                        ]
+                                    }),
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "TOTAL:", bold: true, alignment: AlignmentType.RIGHT })],
+                                                shading: { fill: "4472C4" }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: `$${formData.total}`, bold: true })],
+                                                shading: { fill: "B4C7E7" }
+                                            })
+                                        ]
+                                    })
+                                ]
+                            }),
+
+                            // Notes Section
+                            new Paragraph({
+                                text: "Special Notes",
+                                heading: HeadingLevel.HEADING_3,
+                                spacing: { before: 300, after: 100 }
+                            }),
+
+                            new Table({
+                                width: { size: 100, type: WidthType.PERCENTAGE },
+                                rows: [
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Item #", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 10, type: WidthType.PERCENTAGE }
+                                            }),
+                                            new TableCell({
+                                                children: [new Paragraph({ text: "Notes", bold: true })],
+                                                shading: { fill: "4472C4" },
+                                                width: { size: 90, type: WidthType.PERCENTAGE }
+                                            })
+                                        ]
+                                    }),
+                                    ...formData.entries.map((entry, i) => 
+                                        new TableRow({
+                                            children: [
+                                                new TableCell({
+                                                    children: [new Paragraph((i + 1).toString())],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                }),
+                                                new TableCell({
+                                                    children: [new Paragraph(entry.notes)],
+                                                    shading: { fill: i % 2 === 0 ? "FFFFFF" : "F2F2F2" }
+                                                })
+                                            ]
+                                        })
+                                    )
+                                ]
+                            }),
+
+                            // TERMS AND CONDITIONS SECTION
+                            new Paragraph({
+                                text: "",
+                                spacing: { before: 400 }
+                            }),
+
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "You will be receiving a phone call from 310-203-4880 to schedule your install.",
+                                        bold: true,
+                                        size: 18
+                                    })
+                                ],
+                                spacing: { after: 100 }
+                            }),
+
+                            new Paragraph({
+                                children: [
+                                    new TextRun({ text: "Notes: ", bold: true, size: 16 }),
+                                    new TextRun({ text: "Includes Window(s) and/or Door(s), screen, installation, lifetime warranty, and haul away.", size: 16 })
+                                ],
+                                spacing: { after: 100 }
+                            }),
+
+                            new Paragraph({
+                                children: [
+                                    new TextRun({ text: "Payment Terms: ", bold: true, size: 16 }),
+                                    new TextRun({ text: "*10% Deposit or $1000 whichever is less, 40% or the balance to complete 50% at the time of final measurements. Final 50% On Delivery", size: 16 })
+                                ],
+                                spacing: { after: 100 }
+                            }),
+
+                            new Paragraph({
+                                text: "Quote valid for 30 days from date here of. Customer is responsible to verify design and configurations. All orders are final and non-refundable. Customer is responsible for confirmation to local city building codes. Any window coverings, drapes, blinds, shutters, etc... must be removed by the customer prior to install. Bear Windows will not be responsible for any of the window coverings being damaged during removal or installation. All furniture or breakables must be moved 3ft away from the window(s) or door(s) by the customer(s). Bear windows will not be responsible for any furniture that is damaged while being moved by our workers. Alarm connections must be reconnected by the customer. Drawings, plans or permits may incur an additional fee.",
+                                spacing: { after: 200 }
+                            }),
+
+                            new Paragraph({
+                                children: [
+                                    new TextRun({ text: "INITIALS: __________", bold: true })
+                                ],
+                                spacing: { after: 100 }
+                            }),
+
+                            new Paragraph({ text: "Down Payment of  $__________", spacing: { after: 50 } }),
+                            new Paragraph({ text: "Second Payment of  $__________", spacing: { after: 50 } }),
+                            new Paragraph({ text: "Final Payment of  $__________", spacing: { after: 100 } }),
+
+                            new Paragraph({ text: "CREDIT CARD # ___________  ________________  ____________  ________", spacing: { after: 100 } }),
+                            new Paragraph({ text: "Financing_______ Visa_____ Master Card______ Discover______ American Express______ Expiration Date____/20____ 3 or 4 Digit Code______", spacing: { after: 100 } }),
+
+                            new Paragraph({
+                                text: "(Signature)__________________________________ Date:______/_______/20______",
+                                spacing: { after: 50 }
+                            }),
+
+                            new Paragraph({
+                                text: "By Signing above, I authorize Bear Windows Inc. to process my credit card before installation of window(s):",
+                                spacing: { after: 200 }
+                            }),
+
+                            new Paragraph({
+                                children: [
+                                    new TextRun({ text: "3 or 5 Day Cancelation Clause:", bold: true, underline: { type: UnderlineType.SINGLE } })
+                                ],
+                                spacing: { after: 100 }
+                            }),
+
+                            new Paragraph({
+                                text: "Date of Transaction: ____/____/____ You, the buyer, have the right to cancel this contract within three business days or 5 days if your are over the age of 65. You may cancel by emailing, mailing, faxing, or delivering a written notice to Bear Windows at 2501 Strozier Ave, South El Monte, CA 91733 by midnight of the third day after you received a signed and dated copy of the contract that includes this notice (fifth day if you are over 65). Include your name, your address, and the date you received the signed copy of the contract.",
+                                spacing: { after: 200 }
+                            }),
+
+                            new Paragraph({
+                                children: [
+                                    new TextRun({ text: "Waiver of Cancelation Clause:", bold: true, underline: { type: UnderlineType.SINGLE } })
+                                ],
+                                spacing: { after: 50 }
+                            }),
+
+                            new Paragraph({
+                                text: "By Signing here you acknowledge that you are waiving your 3 or 5 day Cancelation Clause.",
+                                spacing: { after: 100 }
+                            }),
+
+                            new Paragraph({
+                                text: "Printed Name____________________________________________ Signature______________________________________ Date___________________________",
+                                spacing: { after: 200 }
+                            }),
+
+                            new Paragraph({
+                                children: [
+                                    new TextRun({ text: "Mechanics Lien Warning: ", bold: true })
+                                ],
+                                spacing: { after: 50 }
+                            }),
+
+                            new Paragraph({
+                                text: "Anyone who helps improve your property, but who is not paid in full may record what is called a mechanics lien on your property. A mechanics lien is a claim, like a mortgage or home equity loan, made against your property and recorded with the county recorder. If a court finds the lien valid, you could be forced to pay twice or have a county officer sell your home to pay the lien.",
+                                spacing: { after: 100 }
+                            }),
+
+                            new Paragraph({
+                                text: "By signing below, I am acknowledging that I am owner of said property and take full responsibility for amount of this contract I understand that if I use a Credit Card, I have to pay in full when my window(s) is (are) installed. I agree pay a $50 fee to Bear Windows Inc. plus the amount owed if my check is returned or charges are disputed. I have Read, Acknowledged and Agree with the \"Terms and Conditions\" in which its presented and Agree with the terms of this Contract and Warranty.",
+                                spacing: { after: 100 }
+                            }),
+
+                            new Paragraph({
+                                text: "Print Name______________________Signature__________________________Date_____________",
+                                spacing: { after: 50 }
+                            }),
+
+                            new Paragraph({
+                                text: "Print Name______________________Signature__________________________Date_____________",
+                                spacing: { after: 100 }
+                            }),
+
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "WWW.BEARWINDOWSINC.COM",
+                                        bold: true
+                                    })
+                                ],
+                                alignment: AlignmentType.CENTER
+                            })
+                        ]
+                    }]
+                });
+
+                const blob = await Packer.toBlob(doc);
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `Bear_Contract_${formData.soldTo.replace(/\s+/g, '_')}.docx`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                alert('Error generating Word document: ' + error.message);
+                console.error(error);
+            }
+            hideLoading();
+        }

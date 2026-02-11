@@ -321,9 +321,42 @@ document.getElementById("contractForm").addEventListener("submit", function(e) {
 
     console.log("FINAL JSON OBJECT:", formData);
 
-    // Save to localStorage and redirect to thank you page
+    // Save to localStorage first
     localStorage.setItem('bearContractData', JSON.stringify(formData));
-    window.location.href = 'thank-you.html';
+
+    // Generate PDF link (this will be the URL to the thank-you page where they can download)
+    const baseUrl = window.location.origin + window.location.pathname.replace('windowform.html', '');
+    const pdfLink = baseUrl + 'thank-you.html';
+
+    // Send to Zapier webhook using FormData for better compatibility
+    const formDataToSend = new FormData();
+    formDataToSend.append('phone', formData.phone);
+    formDataToSend.append('email', formData.email);
+    formDataToSend.append('pdfLink', pdfLink);
+    formDataToSend.append('soldTo', formData.soldTo);
+    formDataToSend.append('jobSite', formData.jobSite);
+    formDataToSend.append('serviceType', formData.serviceType);
+    formDataToSend.append('preferredDate', formData.preferredDate);
+    formDataToSend.append('subtotal', formData.subtotal);
+    formDataToSend.append('tax', formData.tax);
+    formDataToSend.append('total', formData.total);
+    formDataToSend.append('numberOfItems', formData.entries.length);
+    formDataToSend.append('submittedAt', new Date().toISOString());
+
+    fetch('https://hooks.zapier.com/hooks/catch/5506897/uea33t4/', {
+        method: 'POST',
+        body: formDataToSend
+    })
+    .then(response => {
+        console.log('Zapier webhook response:', response);
+        // Redirect to thank you page regardless of webhook success
+        window.location.href = 'thank-you.html';
+    })
+    .catch(error => {
+        console.error('Error sending to Zapier:', error);
+        // Still redirect to thank you page even if webhook fails
+        window.location.href = 'thank-you.html';
+    });
 });
 
 </script>
