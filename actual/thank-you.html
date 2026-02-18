@@ -23,20 +23,9 @@
             text-align: center;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .checkmark {
-            font-size: 80px;
-            color: #4CAF50;
-            margin-bottom: 20px;
-        }
-        p {
-            color: #666;
-            font-size: 18px;
-            margin-bottom: 30px;
-        }
+        h1 { color: #333; margin-bottom: 10px; }
+        .checkmark { font-size: 80px; color: #4CAF50; margin-bottom: 20px; }
+        p { color: #666; font-size: 18px; margin-bottom: 30px; }
         .download-buttons {
             display: flex;
             gap: 15px;
@@ -58,23 +47,8 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .btn-word {
-            background: #2b579a;
-            color: white;
-        }
-        .btn-pdf {
-            background: #d9534f;
-            color: white;
-        }
-        .btn-both {
-            background: #5cb85c;
-            color: white;
-        }
-        .loading {
-            display: none;
-            margin-top: 20px;
-            color: #666;
-        }
+        .btn-pdf { background: #d9534f; color: white; }
+        .loading { display: none; margin-top: 20px; color: #666; }
         .spinner {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #667eea;
@@ -88,78 +62,20 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        /* New styles for shareable link */
-        .shareable-link-container {
-            display: none;
-            margin-top: 30px;
-            padding: 20px;
-            background: #f0f7ff;
-            border-radius: 10px;
-            border: 2px solid #667eea;
-        }
-        .shareable-link-container.show {
-            display: block;
-        }
-        .link-header {
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .link-box {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-top: 10px;
-        }
-        .link-input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            background: white;
-        }
-        .copy-btn {
-            padding: 12px 24px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-        .copy-btn:hover {
-            background: #5568d3;
-        }
-        .copy-btn.copied {
-            background: #4CAF50;
-        }
-        .link-description {
-            margin-top: 10px;
-            font-size: 13px;
-            color: #666;
-        }
     </style>
-    <script src="https://unpkg.com/docx@7.8.2/build/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="thank-you-container">
         <div class="checkmark">✓</div>
         <h1>Thank You!</h1>
-        <p>Your Bear Intake Contract has been convereted successfully, click the button to submit!.</p>
+        <p>Your Bear Intake Contract has been converted successfully, click the button to submit!</p>
         <p>Choose your preferred download format:</p>
         
         <div class="download-buttons">
-           
             <button class="download-btn btn-pdf" onclick="downloadPDF()">
                 📕 Download PDF
             </button>
-           
-
             <div style="margin-top: 30px;">
                 <button class="download-btn" style="background: #6c757d;" onclick="window.location.href='windowform.html'">
                     📝 Submit Another Form
@@ -171,13 +87,9 @@
             <div class="spinner"></div>
             <p>Generating your documents...</p>
         </div>
-        
-        <!-- New shareable link section -->
-        
     </div>
 
     <script>
-        // Get form data from localStorage
         const formData = JSON.parse(localStorage.getItem('bearContractData'));
 
         if (!formData) {
@@ -185,40 +97,8 @@
             window.location.href = 'windowform.html';
         }
 
-        // Store the PDF blob globally so we can create multiple links
-        let pdfBlobUrl = null;
-
-        function showLoading() {
-            document.getElementById('loading').style.display = 'block';
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        
-
-        function copyLink() {
-            const input = document.getElementById('pdfLinkInput');
-            const copyBtn = document.getElementById('copyBtn');
-            
-            input.select();
-            input.setSelectionRange(0, 99999); // For mobile devices
-            
-            navigator.clipboard.writeText(input.value).then(() => {
-                copyBtn.textContent = '✓ Copied!';
-                copyBtn.classList.add('copied');
-                
-                setTimeout(() => {
-                    copyBtn.textContent = 'Copy Link';
-                    copyBtn.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                alert('Failed to copy link. Please select and copy manually.');
-            });
-        }
-
-        
+        function showLoading() { document.getElementById('loading').style.display = 'block'; }
+        function hideLoading() { document.getElementById('loading').style.display = 'none'; }
 
         async function downloadPDF() {
             showLoading();
@@ -239,49 +119,41 @@
                     }
                     return false;
                 }
-                
+
                 async function convertWebpToPng(url) {
                     const img = new Image();
                     img.crossOrigin = "Anonymous";
                     img.src = url;
                     await img.decode();
-
                     const canvas = document.createElement("canvas");
                     canvas.width = img.width;
                     canvas.height = img.height;
-
                     const ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0);
-
                     return canvas.toDataURL("image/png");
                 }
 
-                // Header
+                // ── Header ──────────────────────────────────────────────────
                 doc.setFillColor(68, 114, 196);
                 doc.rect(0, 0, pageWidth, 20, 'F');
                 doc.setTextColor(255, 255, 255);
                 doc.setFontSize(18);
                 doc.setFont(undefined, 'bold');
                 doc.text("BEAR INTAKE CONTRACT", pageWidth / 2, 12, { align: 'center' });
-                
                 doc.setTextColor(0, 0, 0);
                 yPos = 30;
-                
-                // Image 
-                const imageUrl = "https://images.leadconnectorhq.com/image/f_webp/q_85/r_1000/u_https://storage.googleapis.com/highlevel-backend.appspot.com/location/xzNra69OGYHaxmdDlDMn/form/eDvPanXWhbtHSvXrKdqz/b7d8cff1-2f99-4651-9dd9-f269926c08bb.webp";
 
+                const imageUrl = "https://images.leadconnectorhq.com/image/f_webp/q_85/r_1000/u_https://storage.googleapis.com/highlevel-backend.appspot.com/location/xzNra69OGYHaxmdDlDMn/form/eDvPanXWhbtHSvXrKdqz/b7d8cff1-2f99-4651-9dd9-f269926c08bb.webp";
                 const pngBase64 = await convertWebpToPng(imageUrl);
                 doc.addImage(pngBase64, "PNG", margin, yPos, 35, 20);
-
                 yPos += 20;
 
-                // Date
                 doc.setFontSize(9);
                 doc.setFont(undefined, 'normal');
                 doc.text(`Date: ${new Date().toLocaleDateString()}`, pageWidth - margin, yPos, { align: 'right' });
                 yPos += 10;
 
-                // CLIENT INFORMATION Section
+                // ── Client Information ───────────────────────────────────────
                 doc.setFillColor(68, 114, 196);
                 doc.rect(margin, yPos, pageWidth - (margin * 2), 7, 'F');
                 doc.setTextColor(255, 255, 255);
@@ -291,20 +163,17 @@
                 doc.setTextColor(0, 0, 0);
                 yPos += 8;
 
-                // Client info in compact 2-column format
                 const rowHeight = 6;
                 const col1Width = (pageWidth - margin * 2) / 2;
 
                 doc.setFillColor(245, 245, 245);
                 doc.rect(margin, yPos, pageWidth - (margin * 2), rowHeight, 'F');
                 doc.rect(margin, yPos, pageWidth - (margin * 2), rowHeight);
-                
                 doc.setFontSize(8);
                 doc.setFont(undefined, 'bold');
                 doc.text("Sold To:", margin + 2, yPos + 4);
                 doc.setFont(undefined, 'normal');
                 doc.text(formData.soldTo, margin + 20, yPos + 4);
-                
                 doc.setFont(undefined, 'bold');
                 doc.text("Phone:", margin + col1Width + 2, yPos + 4);
                 doc.setFont(undefined, 'normal');
@@ -316,14 +185,13 @@
                 doc.text("Email:", margin + 2, yPos + 4);
                 doc.setFont(undefined, 'normal');
                 doc.text(formData.email, margin + 20, yPos + 4);
-                
                 doc.setFont(undefined, 'bold');
                 doc.text("Job Site:", margin + col1Width + 2, yPos + 4);
                 doc.setFont(undefined, 'normal');
                 doc.text(formData.jobSite, margin + col1Width + 18, yPos + 4);
                 yPos += rowHeight + 5;
 
-                // SERVICE DETAILS Section
+                // ── Service Details ──────────────────────────────────────────
                 doc.setFillColor(68, 114, 196);
                 doc.rect(margin, yPos, pageWidth - (margin * 2), 7, 'F');
                 doc.setTextColor(255, 255, 255);
@@ -336,20 +204,18 @@
                 doc.setFillColor(245, 245, 245);
                 doc.rect(margin, yPos, pageWidth - (margin * 2), rowHeight, 'F');
                 doc.rect(margin, yPos, pageWidth - (margin * 2), rowHeight);
-                
                 doc.setFontSize(8);
                 doc.setFont(undefined, 'bold');
                 doc.text("Service Type:", margin + 2, yPos + 4);
                 doc.setFont(undefined, 'normal');
                 doc.text(formData.serviceType, margin + 28, yPos + 4);
-                
                 doc.setFont(undefined, 'bold');
                 doc.text("Preferred Date:", margin + col1Width + 2, yPos + 4);
                 doc.setFont(undefined, 'normal');
                 doc.text(formData.preferredDate, margin + col1Width + 30, yPos + 4);
                 yPos += rowHeight + 8;
 
-                // ITEMS TABLE - Spreadsheet Style
+                // ── Items Table ──────────────────────────────────────────────
                 doc.setFillColor(68, 114, 196);
                 doc.rect(margin, yPos, pageWidth - (margin * 2), 7, 'F');
                 doc.setTextColor(255, 255, 255);
@@ -359,42 +225,34 @@
                 doc.setTextColor(0, 0, 0);
                 yPos += 8;
 
-                // Table headers
                 const tableWidth = pageWidth - (margin * 2);
-                const colWidths = [10, 12, 18, 18, 16, 22, 25, 30, 24, 24, 18, 20, 30, 20];
+                const colWidths =  [10, 12, 18, 18, 16, 17, 40, 25, 24, 24, 13, 20, 30, 20];
                 const colHeaders = ["#", "Qty", "Width", "Height", "Factor", "Frame", "Glass Type", "Glass Make-up", "Wall Type", "Color", "Grid", "Room", "Config Ext.", "Price"];
-                
+
+                // Table header row
                 let xPos = margin;
                 doc.setFillColor(68, 114, 196);
                 doc.rect(margin, yPos, tableWidth, 6, 'F');
-                
                 doc.setTextColor(255, 255, 255);
                 doc.setFontSize(7);
                 doc.setFont(undefined, 'bold');
-                
                 colHeaders.forEach((header, i) => {
                     doc.text(header, xPos + 1, yPos + 4);
                     xPos += colWidths[i];
                 });
-                
                 doc.setTextColor(0, 0, 0);
                 yPos += 6;
 
                 // Table data rows
                 formData.entries.forEach((entry, idx) => {
                     checkPageBreak(8);
-                    
                     xPos = margin;
-                    
-                    // Alternating row colors
-                    if (idx % 2 === 0) {
-                        doc.setFillColor(255, 255, 255);
-                    } else {
-                        doc.setFillColor(242, 242, 242);
-                    }
+
+                    // Alternating row fill
+                    doc.setFillColor(idx % 2 === 0 ? 255 : 242, idx % 2 === 0 ? 255 : 242, idx % 2 === 0 ? 255 : 242);
                     doc.rect(margin, yPos, tableWidth, 6, 'F');
-                    
-                    // Draw cell borders
+
+                    // Cell borders
                     doc.setDrawColor(200, 200, 200);
                     let currentX = margin;
                     colWidths.forEach(width => {
@@ -403,58 +261,102 @@
                     });
                     doc.line(currentX, yPos, currentX, yPos + 6);
                     doc.rect(margin, yPos, tableWidth, 6);
-                    
+
                     doc.setFontSize(6);
-                    doc.setFont(undefined, 'normal');
-                    
-                    const rowData = [
-                        (idx + 1).toString(),
-                        entry.qty,
-                        entry.width,
-                        entry.height,
-                        entry.factor,
-                        entry.frame,
-                        entry.glassType,
-                        entry.glassMakeup,
-                        entry.wallType,
-                        entry.color,
-                        entry.grid,
-                        entry.room,
-                        entry.configExterior,
-                        `$${entry.price}`
-                    ];
-                    
-                    rowData.forEach((data, i) => {
-                        let displayText = data.toString();
-                        if (doc.getTextWidth(displayText) > colWidths[i] - 2) {
-                            while (doc.getTextWidth(displayText + '...') > colWidths[i] - 2 && displayText.length > 0) {
-                                displayText = displayText.slice(0, -1);
+
+                    if (entry.isCustom) {
+                        // ── Custom item row: show name spanning most columns, price at end ──
+                        
+                        // Light green tint for custom rows
+                        doc.setFillColor(232, 245, 232);
+                        doc.rect(margin, yPos, tableWidth, 6, 'F');
+                        // Redraw borders over the fill
+                        doc.setDrawColor(200, 200, 200);
+                        let cx = margin;
+                        colWidths.forEach(width => {
+                            doc.line(cx, yPos, cx, yPos + 6);
+                            cx += width;
+                        });
+                        doc.line(cx, yPos, cx, yPos + 6);
+                        doc.rect(margin, yPos, tableWidth, 6);
+
+                        // Row number
+                        doc.setFont(undefined, 'normal');
+                        doc.text((idx + 1).toString(), margin + 1, yPos + 4);
+
+                        // "CUSTOM" label + item name spanning columns 2–13
+                        doc.setFont(undefined, 'bold');
+                        const nameStartX = margin + colWidths[0]; // after "#" column
+                        const nameEndX   = margin + colWidths.slice(0, 13).reduce((a, b) => a + b, 0); // up to Price col
+                        const nameAvailableWidth = nameEndX - nameStartX - 2;
+
+                        const customLabel = "CUSTOM: ";
+                        const fullName = customLabel + (entry.customName || "Custom Item");
+                        let displayName = fullName;
+                        doc.setFont(undefined, 'bold');
+                        if (doc.getTextWidth(displayName) > nameAvailableWidth) {
+                            while (doc.getTextWidth(displayName + '...') > nameAvailableWidth && displayName.length > customLabel.length) {
+                                displayName = displayName.slice(0, -1);
                             }
-                            displayText += '...';
+                            displayName += '...';
                         }
-                        
-                        if (i === 13) {
-                            doc.setFont(undefined, 'bold');
-                            doc.setFillColor(214, 234, 248);
-                            doc.rect(xPos, yPos, colWidths[i], 6, 'F');
-                        }
-                        
-                        doc.text(displayText, xPos + 1, yPos + 4);
-                        
-                        if (i === 13) {
-                            doc.setFont(undefined, 'normal');
-                        }
-                        
-                        xPos += colWidths[i];
-                    });
-                    
+                        doc.text(displayName, nameStartX + 1, yPos + 4);
+
+                        // Price column (bold, blue tint)
+                        const priceColX = margin + colWidths.slice(0, 13).reduce((a, b) => a + b, 0);
+                        doc.setFillColor(214, 234, 248);
+                        doc.rect(priceColX, yPos, colWidths[13], 6, 'F');
+                        doc.setFont(undefined, 'bold');
+                        doc.text(`$${entry.price}`, priceColX + 1, yPos + 4);
+
+                    } else {
+                        // ── Standard item row ──
+                        const rowData = [
+                            (idx + 1).toString(),
+                            entry.qty,
+                            entry.width,
+                            entry.height,
+                            entry.factor,
+                            entry.frame,
+                            entry.glassType,
+                            entry.glassMakeup,
+                            entry.wallType,
+                            entry.color,
+                            entry.grid,
+                            entry.room,
+                            entry.configExterior,
+                            `$${entry.price}`
+                        ];
+
+                        rowData.forEach((data, i) => {
+                            let displayText = data.toString();
+                            if (doc.getTextWidth(displayText) > colWidths[i] - 2) {
+                                while (doc.getTextWidth(displayText + '...') > colWidths[i] - 2 && displayText.length > 0) {
+                                    displayText = displayText.slice(0, -1);
+                                }
+                                displayText += '...';
+                            }
+
+                            if (i === 13) {
+                                doc.setFont(undefined, 'bold');
+                                doc.setFillColor(214, 234, 248);
+                                doc.rect(xPos, yPos, colWidths[i], 6, 'F');
+                            } else {
+                                doc.setFont(undefined, 'normal');
+                            }
+
+                            doc.text(displayText, xPos + 1, yPos + 4);
+                            xPos += colWidths[i];
+                        });
+                    }
+
                     yPos += 6;
                 });
 
                 yPos += 8;
                 checkPageBreak(30);
 
-                // Totals Section
+                // ── Totals ───────────────────────────────────────────────────
                 const totalsX = pageWidth - margin - 70;
                 const totalsWidth = 70;
 
@@ -483,7 +385,7 @@
 
                 checkPageBreak(20);
 
-                // Special Notes Section
+                // ── Special Notes ────────────────────────────────────────────
                 doc.setFillColor(68, 114, 196);
                 doc.rect(margin, yPos, pageWidth - (margin * 2), 6, 'F');
                 doc.setTextColor(255, 255, 255);
@@ -495,24 +397,29 @@
 
                 formData.entries.forEach((entry, idx) => {
                     checkPageBreak(10);
-                    
+
+                    const notesText = entry.isCustom
+                        ? (entry.customName || "Custom Item") + (entry.notes ? `: ${entry.notes}` : "")
+                        : entry.notes;
+
                     doc.setFillColor(idx % 2 === 0 ? 255 : 245, idx % 2 === 0 ? 255 : 245, idx % 2 === 0 ? 255 : 245);
                     const notesHeight = 8;
                     doc.rect(margin, yPos, tableWidth, notesHeight, 'F');
                     doc.rect(margin, yPos, tableWidth, notesHeight);
-                    
+
                     doc.setFontSize(7);
                     doc.setFont(undefined, 'bold');
-                    doc.text(`Item ${idx + 1}:`, margin + 2, yPos + 5);
-                    
+                    const label = entry.isCustom ? `Custom ${idx + 1}:` : `Item ${idx + 1}:`;
+                    doc.text(label, margin + 2, yPos + 5);
+
                     doc.setFont(undefined, 'normal');
-                    const notesText = doc.splitTextToSize(entry.notes, tableWidth - 30);
-                    doc.text(notesText, margin + 20, yPos + 5);
-                    
+                    const splitNotes = doc.splitTextToSize(notesText || "-", tableWidth - 30);
+                    doc.text(splitNotes, margin + 20, yPos + 5);
+
                     yPos += notesHeight;
                 });
 
-                // TERMS AND CONDITIONS - START NEW PAGE
+                // ── Terms & Conditions (new page) ────────────────────────────
                 doc.addPage();
                 yPos = 20;
 
@@ -524,8 +431,8 @@
                 doc.setFont(undefined, 'bold');
                 doc.text("Notes:", margin, yPos);
                 doc.setFont(undefined, 'normal');
-                const notesText = doc.splitTextToSize("Includes Window(s) and/or Door(s), screen, installation, lifetime warranty, and haul away.", pageWidth - margin * 2);
-                doc.text(notesText, margin + 12, yPos);
+                const notesLine = doc.splitTextToSize("Includes Window(s) and/or Door(s), screen, installation, lifetime warranty, and haul away.", pageWidth - margin * 2);
+                doc.text(notesLine, margin + 12, yPos);
                 yPos += 6;
 
                 doc.setFont(undefined, 'bold');
@@ -605,47 +512,30 @@
 
                 doc.setFont(undefined, 'bold');
                 doc.setFontSize(10);
-               doc.text("WWW.BEARWINDOWSINC.COM", pageWidth / 2, yPos, { align: 'center' });
+                doc.text("WWW.BEARWINDOWSINC.COM", pageWidth / 2, yPos, { align: 'center' });
 
-// Create blob and URL for sharing
-const pdfBlob = doc.output('blob');
-pdfBlobUrl = URL.createObjectURL(pdfBlob);
+                // ── Send to Zapier & save ────────────────────────────────────
+                const pdfBlob = doc.output('blob');
 
-// SEND THE PDF FILE TO ZAPIER
-const zapData = new FormData();
-zapData.append(
-    "file",
-    pdfBlob,
-    `Bear_Contract_${formData.soldTo.replace(/\s+/g, '_')}.pdf`
-);
-zapData.append("phone", formData.phone);
-zapData.append("email", formData.email);
-//https://hooks.zapier.com/hooks/catch/5506897/uea33t4/"
-fetch("https://hooks.zapier.com/hooks/catch/5506897/uea33t4/", {
-    method: "POST",
-    body: zapData
-})
-.then(res => res.text())
-.then(data => console.log("Sent to Zapier:", data))
-.catch(err => console.error("Zapier error:", err));
+                const zapData = new FormData();
+                zapData.append("file", pdfBlob, `Bear_Contract_${formData.soldTo.replace(/\s+/g, '_')}.pdf`);
+                zapData.append("phone", formData.phone);
+                zapData.append("email", formData.email);
 
-// Download the PDF for the user
-doc.save(`Bear_Contract_${formData.soldTo.replace(/\s+/g, '_')}.pdf`);
+                fetch("https://hooks.zapier.com/hooks/catch/5506897/uea33t4/", {
+                    method: "POST",
+                    body: zapData
+                })
+                .then(res => res.text())
+                .then(data => console.log("Sent to Zapier:", data))
+                .catch(err => console.error("Zapier error:", err));
 
-// Show shareable link (browser-only)
+                doc.save(`Bear_Contract_${formData.soldTo.replace(/\s+/g, '_')}.pdf`);
 
             } catch (error) {
                 alert('Error generating PDF: ' + error.message);
                 console.error(error);
             }
-            hideLoading();
-        }
-
-        async function downloadBoth() {
-            showLoading();
-            await downloadWord();
-            await new Promise(resolve => setTimeout(resolve, 500));
-            await downloadPDF();
             hideLoading();
         }
     </script>

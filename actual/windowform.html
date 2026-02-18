@@ -5,6 +5,77 @@
     <title>Bear Intake Contract</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Dropdown select styling */
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 15px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            appearance: auto;
+        }
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102,126,234,0.2);
+        }
+        /* Custom item styling */
+        .custom-entry-block {
+            border: 2px dashed #5cb85c;
+            background: #f9fff9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .custom-entry-block .entry-title {
+            color: #3a7a3a;
+        }
+        .custom-price-badge {
+            display: inline-block;
+            background: #5cb85c;
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+        .add-custom-btn {
+            background: #5cb85c;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: background 0.2s;
+        }
+        .add-custom-btn:hover {
+            background: #4cae4c;
+        }
+        .custom-price-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #5cb85c;
+            border-radius: 4px;
+            background: #e8f5e9;
+            color: #2e7d2e;
+            box-sizing: border-box;
+        }
+        .custom-price-input:focus {
+            outline: none;
+            border-color: #3a7a3a;
+        }
+    </style>
 </head>
 
 <body>
@@ -57,7 +128,10 @@
 
 	<div id="entries-container"></div>
 
-	<button type="button" class="add-btn" onclick="addEntry()">➕ Add Item</button>
+	<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+		<button type="button" class="add-btn" onclick="addEntry()">➕ Add Item</button>
+		<button type="button" class="add-custom-btn" onclick="addCustomEntry()">✏️ Add Custom Item</button>
+	</div>
 
 	<!-- Totals Display -->
 	<div style="margin-top: 30px; padding: 20px; background: #f0f0f0; border-radius: 8px;">
@@ -94,10 +168,17 @@ function calculatePrice(entryId) {
 	updateTotals();
 }
 
+function updateCustomPrice(entryId) {
+	const input = document.querySelector(`input[name='customPrice_${entryId}']`);
+	const price = parseFloat(input.value) || 0;
+	document.querySelector(`#price_${entryId}`).textContent = `$${price.toFixed(2)}`;
+	updateTotals();
+}
+
 function updateTotals() {
 	let subtotal = 0;
 	
-	// Calculate subtotal from all price displays
+	// Sum all price displays (covers both regular and custom entries)
 	document.querySelectorAll('[id^="price_"]').forEach(priceEl => {
 		const priceValue = parseFloat(priceEl.textContent.replace('$', '')) || 0;
 		subtotal += priceValue;
@@ -115,9 +196,9 @@ function addEntry() {
 	entryCount++;
 
 	const container = document.getElementById("entries-container");
-
 	const entry = document.createElement("div");
 	entry.className = "entry-block";
+	entry.dataset.entryType = "standard";
 
 	entry.innerHTML = `
     <div class="entry-title">Entry ${entryCount}</div>
@@ -144,12 +225,28 @@ function addEntry() {
 
     <div class="field-group">
         <label>Frame *</label>
-        <input type="text" name="frame_${entryCount}">
+        <select name="frame_${entryCount}">
+            <option value="">-- Select Frame --</option>
+            <option value="Retro-fit">Retro-fit</option>
+            <option value="Block frame">Block frame</option>
+            <option value="Nail-on">Nail-on</option>
+            <option value="Retroluxfin 2.5">Retroluxfin 2.5</option>
+        </select>
     </div>
 
     <div class="field-group">
         <label>Glass Type *</label>
-        <input type="text" name="glassType_${entryCount}">
+        <select name="glassType_${entryCount}">
+            <option value="">-- Select Glass Type --</option>
+            <option value="Title 24 package dual pane">Title 24 package dual pane</option>
+            <option value="Title 24 package width tempered">Title 24 package width tempered</option>
+            <option value="Title 24 package fire zone compliant">Title 24 package fire zone compliant</option>
+            <option value="Title 24 package width fire zone glass">Title 24 package width fire zone glass</option>
+            <option value="Title 24 package width obscured">Title 24 package width obscured</option>
+            <option value="Title 24 package width laminate">Title 24 package width laminate</option>
+            <option value="Title 24 package high security glass">Title 24 package high security glass</option>
+            <option value="Title 24 package width triple pane">Title 24 package triple pane</option>
+        </select>
     </div>
 
     <div class="field-group">
@@ -200,6 +297,58 @@ function addEntry() {
 	container.appendChild(entry);
 }
 
+// ─── NEW: Add Custom Item ────────────────────────────────────────────────────
+function addCustomEntry() {
+	entryCount++;
+
+	const container = document.getElementById("entries-container");
+	const entry = document.createElement("div");
+	entry.className = "custom-entry-block";
+	entry.dataset.entryType = "custom";
+
+	entry.innerHTML = `
+    <div class="entry-title">
+        Custom Item ${entryCount}
+        <span class="custom-price-badge">CUSTOM</span>
+    </div>
+
+    <div class="field-group">
+        <label>Item Name *</label>
+        <input type="text" name="customName_${entryCount}" placeholder="e.g. Permit fee, Special hardware...">
+    </div>
+
+    <div class="field-group">
+        <label>Price ($) *</label>
+        <input 
+            type="number" 
+            name="customPrice_${entryCount}" 
+            class="custom-price-input"
+            placeholder="0.00" 
+            min="0" 
+            step="0.01"
+            oninput="updateCustomPrice(${entryCount})"
+        >
+    </div>
+
+    <div class="field-group">
+        <label>Price</label>
+        <div style="padding: 10px; background: #e8f5e9; border-radius: 4px; font-weight: bold; font-size: 18px;">
+            <span id="price_${entryCount}">$0.00</span>
+        </div>
+    </div>
+
+    <div class="field-group">
+        <label>Notes</label>
+        <textarea name="customNotes_${entryCount}" placeholder="Optional notes..."></textarea>
+    </div>
+
+    <button type="button" class="delete-btn full-width" onclick="deleteEntry(this)">🗑️ Delete Custom Item</button>
+`;
+
+	container.appendChild(entry);
+}
+// ────────────────────────────────────────────────────────────────────────────
+
 function deleteEntry(button) {
 	button.parentElement.remove();
 	updateTotals();
@@ -209,29 +358,23 @@ function duplicateEntry(button) {
     const original = button.parentElement;
     const clone = original.cloneNode(true);
 
-    // Increase entry count
     entryCount++;
 
-    // Update title
     clone.querySelector(".entry-title").textContent = `Entry ${entryCount}`;
 
-    // Update all input/textarea names and IDs but KEEP values
-    const fields = clone.querySelectorAll("input, textarea");
+    const fields = clone.querySelectorAll("input, textarea, select");
     fields.forEach(field => {
         const base = field.name.split("_")[0];
         field.name = `${base}_${entryCount}`;
         
-        // Add oninput handlers for calculation fields
         if (base === 'width' || base === 'height' || base === 'factor') {
             field.setAttribute('oninput', `calculatePrice(${entryCount})`);
         }
     });
 
-    // Update price display ID
     const priceDisplay = clone.querySelector('[id^="price_"]');
     priceDisplay.id = `price_${entryCount}`;
 
-    // Re-bind duplicate + delete buttons
     clone.querySelector(".duplicate-btn").onclick = function () {
         duplicateEntry(this);
     };
@@ -239,10 +382,7 @@ function duplicateEntry(button) {
         deleteEntry(this);
     };
 
-    // Insert clone after original
     original.after(clone);
-    
-    // Recalculate price for duplicated entry
     calculatePrice(entryCount);
 }
 
@@ -274,44 +414,80 @@ document.getElementById("contractForm").addEventListener("submit", function(e) {
     };
 
     // Collect dynamic entries
-    const entryBlocks = document.querySelectorAll(".entry-block");
-    if (entryBlocks.length === 0) {
+    const allBlocks = document.querySelectorAll(".entry-block, .custom-entry-block");
+    if (allBlocks.length === 0) {
         alert("Please add at least one item before submitting.");
         return;
     }
 
-    for (let block of entryBlocks) {
-        const width = block.querySelector("input[name^='width_']").value;
-        const height = block.querySelector("input[name^='height_']").value;
-        const factor = block.querySelector("input[name^='factor_']").value;
+    for (let block of allBlocks) {
+        const isCustom = block.dataset.entryType === "custom";
         const priceDisplay = block.querySelector("[id^='price_']").textContent;
-        
-        const entry = {
-            qty: block.querySelector("input[name^='qty_']").value,
-            width: width,
-            height: height,
-            factor: factor,
-            frame: block.querySelector("input[name^='frame_']").value,
-            glassType: block.querySelector("input[name^='glassType_']").value,
-            glassMakeup: block.querySelector("input[name^='glassMakeup_']").value,
-            wallType: block.querySelector("input[name^='wallType_']").value,
-            color: block.querySelector("input[name^='color_']").value,
-            grid: block.querySelector("input[name^='grid_']").value,
-            room: block.querySelector("input[name^='room_']").value,
-            price: priceDisplay.replace('$', ''),
-            notes: block.querySelector("textarea[name^='notes_']").value,
-            configExterior: block.querySelector("input[name^='configExterior_']").value
-        };
 
-        // Validate entry fields (except price which is calculated)
-        for (let key in entry) {
-            if (key !== 'price' && entry[key].trim() === "") {
-                alert("Please fill out all fields in each entry.");
+        if (isCustom) {
+            // ── Custom item validation & collection ──
+            const nameField = block.querySelector("input[name^='customName_']");
+            const priceField = block.querySelector("input[name^='customPrice_']");
+
+            if (!nameField.value.trim()) {
+                alert("Please fill out the item name for all custom items.");
+                nameField.focus();
                 return;
             }
-        }
+            if (!priceField.value.trim() || isNaN(parseFloat(priceField.value))) {
+                alert("Please enter a valid price for all custom items.");
+                priceField.focus();
+                return;
+            }
 
-        formData.entries.push(entry);
+            formData.entries.push({
+                isCustom: true,
+                customName: nameField.value.trim(),
+                qty: "1",
+                width: "-",
+                height: "-",
+                factor: "-",
+                frame: "-",
+                glassType: "-",
+                glassMakeup: "-",
+                wallType: "-",
+                color: "-",
+                grid: "-",
+                room: "-",
+                price: parseFloat(priceField.value).toFixed(2),
+                notes: block.querySelector("textarea[name^='customNotes_']").value || "",
+                configExterior: "-"
+            });
+
+        } else {
+            // ── Standard item validation & collection ──
+            const entry = {
+                isCustom: false,
+                qty: block.querySelector("input[name^='qty_']").value,
+                width: block.querySelector("input[name^='width_']").value,
+                height: block.querySelector("input[name^='height_']").value,
+                factor: block.querySelector("input[name^='factor_']").value,
+                frame: block.querySelector("select[name^='frame_']").value,
+                glassType: block.querySelector("select[name^='glassType_']").value,
+                glassMakeup: block.querySelector("input[name^='glassMakeup_']").value,
+                wallType: block.querySelector("input[name^='wallType_']").value,
+                color: block.querySelector("input[name^='color_']").value,
+                grid: block.querySelector("input[name^='grid_']").value,
+                room: block.querySelector("input[name^='room_']").value,
+                price: priceDisplay.replace('$', ''),
+                notes: block.querySelector("textarea[name^='notes_']").value,
+                configExterior: block.querySelector("input[name^='configExterior_']").value
+            };
+
+            for (let key in entry) {
+                if (key !== 'price' && key !== 'isCustom' && entry[key].trim() === "") {
+                    alert("Please fill out all fields in each item entry.");
+                    return;
+                }
+            }
+
+            formData.entries.push(entry);
+        }
     }
 
     // Add totals to formData
@@ -321,14 +497,11 @@ document.getElementById("contractForm").addEventListener("submit", function(e) {
 
     console.log("FINAL JSON OBJECT:", formData);
 
-    // Save to localStorage first
     localStorage.setItem('bearContractData', JSON.stringify(formData));
 
-    // Generate PDF link (this will be the URL to the thank-you page where they can download)
     const baseUrl = window.location.origin + window.location.pathname.replace('windowform.html', '');
     const pdfLink = baseUrl + 'thank-you.html';
 
-    // Send to Zapier webhook using FormData for better compatibility
     const formDataToSend = new FormData();
     formDataToSend.append('phone', formData.phone);
     formDataToSend.append('email', formData.email);
@@ -349,12 +522,10 @@ document.getElementById("contractForm").addEventListener("submit", function(e) {
     })
     .then(response => {
         console.log('Zapier webhook response:', response);
-        // Redirect to thank you page regardless of webhook success
         window.location.href = 'thank-you.html';
     })
     .catch(error => {
         console.error('Error sending to Zapier:', error);
-        // Still redirect to thank you page even if webhook fails
         window.location.href = 'thank-you.html';
     });
 });
