@@ -502,7 +502,7 @@ async function downloadWord() {
                 URL.revokeObjectURL(url);
             } catch (error) {
                 alert('Error generating Word document: ' + error.message);
-                console.error(error);
+                console.error();
             }
             hideLoading();
         }
