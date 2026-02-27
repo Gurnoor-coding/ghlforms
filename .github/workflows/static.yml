@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload only the specific HTML file inside the "actual" folder
-          path: "./root/windowform.html"
+          path: ./root
 
       - name: Deploy to GitHub Pages
         id: deployment
