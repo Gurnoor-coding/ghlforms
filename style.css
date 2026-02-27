@@ -1,0 +1,174 @@
+
+	body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    padding: 40px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-top: 40px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.field-group {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.checkbox-group {
+    margin-top: 10px;
+}
+
+.signature {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.signature input {
+    border-bottom: 2px solid #000;
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+button {
+    margin-top: 40px;
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    background: #2c7be5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1a68d1;
+}
+
+.add-btn {
+    margin-top: 15px;
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.add-btn:hover {
+    background: #218838;
+}
+
+/* ----------------------------- */
+/* ENTRY BLOCK FIXED + CLEANED   */
+/* ----------------------------- */
+
+.entry-block {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 3 even columns */
+    gap: 20px 25px; /* row gap, column gap */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fafafa;
+}
+
+.entry-title {
+    grid-column: 1 / -1; /* full width */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Override default field-group inside entry */
+.entry-block .field-group {
+    display: flex;
+    flex-direction: column; /* label above input */
+    gap: 5px;
+}
+
+/* Make long fields span full width */
+.entry-block .full-width {
+    grid-column: 1 / -1;
+}
+
+.entry-block .delete-btn {
+    grid-column: 1 / -1; /* full width */
+    justify-self: start; /* align left or change to center if you prefer */
+    margin-top: 10px;
+}
+/* Delete button */
+.delete-btn {
+    margin-top: 10px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.delete-btn:hover {
+    background: #b52a37;
+}
+.form-logo {
+    display: block;
+    margin: 0 auto 20px auto; /* center + spacing */
+    max-width: 250px;         /* adjust size as needed */
+    height: auto;
+}
+
+
+.duplicate-btn {
+    margin-top: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.duplicate-btn:hover {
+    background: #0062cc;
+}
