@@ -173,16 +173,22 @@ button:hover {
     background: #0062cc;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 @media (max-width: 768px) {
     body {
         padding: 10px;
         overflow-x: hidden;
+        width: 100%;
     }
 
     .container {
-        padding: 20px;
+        padding: 15px;
         border-radius: 0;
-        overflow-x: hidden;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .field-group {
@@ -191,30 +197,38 @@ button:hover {
 
     .entry-block {
         grid-template-columns: 1fr !important;
-        overflow-x: hidden;
-    }
-
-    .entry-block .field-group {
-        width: 100%;
-    }
-
-    .entry-block input,
-    .entry-block select,
-    .entry-block textarea,
-    .custom-entry-block input,
-    .custom-entry-block select,
-    .custom-entry-block textarea {
         width: 100%;
         box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    /* Force every direct child of entry-block to stay in bounds */
+    .entry-block > * {
+        grid-column: 1 / -1 !important;
+        min-width: 0;
         max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .custom-entry-block {
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .custom-entry-block > * {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .sketch-section {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .sketch-section select {
         width: 100%;
         box-sizing: border-box;
     }
