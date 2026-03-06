@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 
-    <!-- Sketch image manifest (kept for future use) -->
-    <script src="sketches-data.js" onerror="window.SKETCH_MANIFEST={}"></script>
+    <!-- Auto-generated sketch image list. Re-run: node generate-manifest.js -->
+    <script src="sketches-data.js"></script>
 
     <style>
         select {
@@ -39,6 +39,23 @@
             color: #4a5568;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+        }
+        .sketch-preview {
+            display: none;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .sketch-preview img {
+            max-width: 100%;
+            max-height: 220px;
+            border-radius: 6px;
+            border: 2px solid #667eea;
+            object-fit: contain;
+        }
+        .sketch-preview p {
+            margin: 6px 0 0 0;
+            font-size: 13px;
+            color: #555;
         }
         .custom-entry-block {
             border: 2px dashed #5cb85c;
@@ -135,62 +152,60 @@
 </form>
 
 <script>
-// ─── Sketch manifest (kept for future image use) ──────────────────────────────
+// ─── Sketch manifest (base64 images pre-embedded by generate-manifest.js) ─────
 const sketchManifest = window.SKETCH_MANIFEST || {};
+if (!window.SKETCH_MANIFEST) {
+    console.warn('sketches-data.js not found. Run: node generate-manifest.js');
+}
 
-// ─── Sketch dropdown options ──────────────────────────────────────────────────
-const EXTERIOR_WINDOW_OPTIONS = [
-    "1. OX SLIDER",
-    "2. XO SLIDER",
-    "3. PICTURE OVER XO",
-    "4. DOUBLE CASEMENT",
-    "5. CASEMENT (RIGHT)",
-    "5. CASEMENT (LEFT)",
-    "6. OX OVER PICTURE",
-    "7. SINGLE HUNG OVER PICTURE",
-    "8. XOX",
-    "9. PICTURE",
-    "10. CASEMENT PICTURE CASEMENT",
-    "11. SINGLE HUNG"
-];
-
-const PATIO_DOOR_OPTIONS = [
-    "1. XO PATIO DOOR",
-    "2. OX PATIO DOOR",
-    "3. OXO PATIO DOOR",
-    "4. XOO PATIO DOOR",
-    "5. OXXO PATIO DOOR"
-];
-
-// ─── Sketch picker builder (text options only, image code preserved) ──────────
+// ─── Sketch picker builder ────────────────────────────────────────────────────
 function buildSketchPicker(categoryKey, entryId, pickerIndex) {
-    const options    = categoryKey === 'Exterior Windows' ? EXTERIOR_WINDOW_OPTIONS : PATIO_DOOR_OPTIONS;
-    const selectId   = `sketch_${pickerIndex}_${entryId}`;
-    const label      = categoryKey === 'Exterior Windows' ? '🪟 Exterior Window Type' : '🚪 Patio Door Type';
+    const images    = sketchManifest[categoryKey] || [];
+    const selectId  = `sketch_${pickerIndex}_${entryId}`;
+    const previewId = `sketchPreview_${pickerIndex}_${entryId}`;
+    const imgId     = `sketchImg_${pickerIndex}_${entryId}`;
+    const labelId   = `sketchLabel_${pickerIndex}_${entryId}`;
 
-    let optionsHTML = `<option value="">-- Select --</option>`;
-    options.forEach(opt => {
-        optionsHTML += `<option value="${opt}">${opt}</option>`;
+    let options = `<option value="">-- Select a sketch --</option>`;
+    images.forEach(img => {
+        options += `<option value="${img.file}">${img.name}</option>`;
     });
 
     return `
         <div class="sketch-section">
-            <h4>${label}</h4>
-            <select id="${selectId}" name="sketch_${pickerIndex}_${entryId}">
-                ${optionsHTML}
+            <h4>📐 ${categoryKey} Sketch</h4>
+            <select id="${selectId}" name="sketch_${pickerIndex}_${entryId}"
+                    onchange="previewSketch('${selectId}','${previewId}','${imgId}','${labelId}','${categoryKey}')">
+                ${options}
             </select>
+            <div class="sketch-preview" id="${previewId}">
+                <img id="${imgId}" src="" alt="Sketch preview">
+                <p id="${labelId}"></p>
+            </div>
         </div>`;
 }
 
-// Kept for future image use — currently unused
+// Show preview using base64 data already in the manifest
 function previewSketch(selectId, previewId, imgId, labelId, categoryKey) {
     const sel     = document.getElementById(selectId);
     const preview = document.getElementById(previewId);
-    if (!sel || !preview) return;
-    preview.style.display = sel.value ? 'block' : 'none';
+    const imgEl   = document.getElementById(imgId);
+    const labelEl = document.getElementById(labelId);
+
+    if (sel && sel.value) {
+        const match = (sketchManifest[categoryKey] || []).find(i => i.file === sel.value);
+        if (match) {
+            imgEl.src             = match.base64;
+            labelEl.textContent   = match.name;
+            preview.style.display = 'block';
+        }
+    } else if (preview) {
+        preview.style.display = 'none';
+    }
 }
 
-// ─── Read sketch selections from a block ─────────────────────────────────────
+// Read the currently selected sketch file values from a block
+// Returns { exteriorFile, patioFile } — empty string if nothing selected
 function readSketchSelections(block) {
     const result = { exteriorFile: '', patioFile: '' };
     block.querySelectorAll("select[id^='sketch_']").forEach(sel => {
@@ -201,12 +216,23 @@ function readSketchSelections(block) {
     return result;
 }
 
+// Apply previously-selected sketch values to a freshly-built block and show previews
 function applySketchSelections(newId, exteriorFile, patioFile) {
-    const map = { '1': exteriorFile, '2': patioFile };
-    Object.entries(map).forEach(([pIdx, val]) => {
-        if (!val) return;
-        const sel = document.getElementById(`sketch_${pIdx}_${newId}`);
-        if (sel) sel.value = val;
+    const categories = [
+        { pIdx: '1', file: exteriorFile, category: 'Exterior Windows' },
+        { pIdx: '2', file: patioFile,    category: 'Patio'            },
+    ];
+    categories.forEach(({ pIdx, file, category }) => {
+        if (!file) return;
+        const selectId  = `sketch_${pIdx}_${newId}`;
+        const previewId = `sketchPreview_${pIdx}_${newId}`;
+        const imgId     = `sketchImg_${pIdx}_${newId}`;
+        const labelId   = `sketchLabel_${pIdx}_${newId}`;
+        const sel = document.getElementById(selectId);
+        if (sel) {
+            sel.value = file;
+            previewSketch(selectId, previewId, imgId, labelId, category);
+        }
     });
 }
 
@@ -343,7 +369,7 @@ function buildCustomEntryHTML(id, values = {}) {
     `;
 }
 
-// ─── Read values ──────────────────────────────────────────────────────────────
+// ─── Read all current values out of a standard entry block ───────────────────
 function readEntryValues(block) {
     const g = name => { const el = block.querySelector(`[name^="${name}_"]`); return el ? el.value : ''; };
     return {
@@ -359,7 +385,7 @@ function readCustomValues(block) {
     return { customName: g('customName'), customPrice: g('customPrice'), customNotes: g('customNotes') };
 }
 
-// ─── Add entries ──────────────────────────────────────────────────────────────
+// ─── Add standard entry ───────────────────────────────────────────────────────
 function addEntry() {
     entryCount++;
     const entry = document.createElement("div");
@@ -369,6 +395,7 @@ function addEntry() {
     document.getElementById("entries-container").appendChild(entry);
 }
 
+// ─── Add custom entry ─────────────────────────────────────────────────────────
 function addCustomEntry() {
     entryCount++;
     const entry = document.createElement("div");
@@ -388,6 +415,8 @@ function deleteEntry(button) {
 function duplicateEntry(button) {
     const original = button.parentElement;
     const isCustom = original.dataset.entryType === "custom";
+
+    // Capture sketch selections BEFORE building the new block
     const { exteriorFile, patioFile } = readSketchSelections(original);
 
     entryCount++;
@@ -399,6 +428,7 @@ function duplicateEntry(button) {
         clone.dataset.entryType = "custom";
         clone.innerHTML         = buildCustomEntryHTML(id, readCustomValues(original));
         original.after(clone);
+        // Restore price display
         const priceVal = parseFloat(clone.querySelector(`input[name='customPrice_${id}']`).value) || 0;
         clone.querySelector(`#price_${id}`).textContent = `$${priceVal.toFixed(2)}`;
     } else {
@@ -409,7 +439,9 @@ function duplicateEntry(button) {
         calculatePrice(id);
     }
 
+    // Re-apply sketch selections now that the new pickers are in the DOM
     applySketchSelections(id, exteriorFile, patioFile);
+
     updateTotals();
 }
 
@@ -426,13 +458,13 @@ document.getElementById("contractForm").addEventListener("submit", function(e) {
     }
 
     const formData = {
-        soldTo: document.querySelector("input[name='soldTo']").value,
-        phone:  document.querySelector("input[name='phone']").value,
-        email:  document.querySelector("input[name='email']").value,
-        jobSite: document.querySelector("input[name='jobSite']").value,
+        soldTo:        document.querySelector("input[name='soldTo']").value,
+        phone:         document.querySelector("input[name='phone']").value,
+        email:         document.querySelector("input[name='email']").value,
+        jobSite:       document.querySelector("input[name='jobSite']").value,
         serviceType:   document.querySelector("input[name='serviceType']").value,
         preferredDate: document.querySelector("input[name='preferredDate']").value,
-        entries: []
+        entries:       []
     };
 
     const allBlocks = document.querySelectorAll(".entry-block, .custom-entry-block");
@@ -442,13 +474,13 @@ document.getElementById("contractForm").addEventListener("submit", function(e) {
         const isCustom     = block.dataset.entryType === "custom";
         const priceDisplay = block.querySelector("[id^='price_']").textContent;
 
-        // Collect sketch/type selections (text values now, no images)
         const sketches = [];
         block.querySelectorAll("select[id^='sketch_']").forEach(sel => {
             if (!sel.value) return;
             const pIdx     = sel.id.split('_')[1];
-            const category = pIdx === '1' ? 'Exterior Windows' : 'Patio Doors';
-            sketches.push({ category, label: sel.value });
+            const category = pIdx === '1' ? 'Exterior Windows' : 'Patio';
+            const match    = (sketchManifest[category] || []).find(i => i.file === sel.value);
+            if (match) sketches.push({ category, file: match.file, label: match.name, base64: match.base64 });
         });
 
         if (isCustom) {
