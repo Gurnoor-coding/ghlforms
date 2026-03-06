@@ -172,3 +172,30 @@ button:hover {
 .duplicate-btn:hover {
     background: #0062cc;
 }
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 20px;
+        border-radius: 0;
+    }
+
+    .field-group {
+        grid-template-columns: 1fr;
+    }
+
+    .entry-block {
+        grid-template-columns: 1fr;
+    }
+
+    .signature {
+        grid-template-columns: 1fr;
+    }
+
+    input, textarea, select {
+        box-sizing: border-box;
+    }
+}
