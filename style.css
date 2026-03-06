@@ -176,11 +176,13 @@ button:hover {
 @media (max-width: 768px) {
     body {
         padding: 10px;
+        overflow-x: hidden;
     }
 
     .container {
         padding: 20px;
         border-radius: 0;
+        overflow-x: hidden;
     }
 
     .field-group {
@@ -188,14 +190,36 @@ button:hover {
     }
 
     .entry-block {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+        overflow-x: hidden;
+    }
+
+    .entry-block .field-group {
+        width: 100%;
+    }
+
+    .entry-block input,
+    .entry-block select,
+    .entry-block textarea,
+    .custom-entry-block input,
+    .custom-entry-block select,
+    .custom-entry-block textarea {
+        width: 100%;
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+
+    .sketch-section {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .sketch-section select {
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .signature {
         grid-template-columns: 1fr;
-    }
-
-    input, textarea, select {
-        box-sizing: border-box;
     }
 }
